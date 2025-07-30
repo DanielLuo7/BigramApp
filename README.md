@@ -33,3 +33,9 @@ Right now, this web app only runs locally and is not deployed. To run, follow th
 4. In the frontend folder, run `npm run start` to launch the web app
 5. Enter in a block of text in the inputs and enter any search parameters
 6. Click `Generate Histogram` to generate the histogram
+
+# Decisions I made
+The baseline functionality is counting the bigrams, defined by two consecutive words, and creating a histogram to display the frequencies. I chose to add the features above because I felt like it would be nice to have some filtering on the output and being able to choose what I search for from the blob of text. I chose to handle only words, using regex to filter out any extra whitespace, puncutation, or any other characters. I made all the words lowercase because I felt like two words with different casing should be handled the same. This covers typos like "tEst" and "test" to be treated the same. I added some validity checks that return 400 status codes if users request an ngram size greater than the input text. For example, if the input text is `test text` and the ngram size is set to 3, we can't construct any ngrams of size 3 from this text. I chose to have the server handle the processing in the case where the input sizes are very large; I didn't want the client side handling heavy computation, even if this means making an API request every time the user would like to generate a histogram
+
+# Considerations and Potential Future Implementations
+With the concerns of many requests, I was curious about any way to implement caching to reduce the number of requests. There might be some optimizations we can do when we return the `k_most_frequent_ngrams` where if the user changes to a k value less than the initial request, we don't have to send another request and can just slice the previously fetched response.
