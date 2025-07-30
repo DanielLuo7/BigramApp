@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 import axios from "axios";
 
 function App() {
@@ -79,11 +79,12 @@ function App() {
       </div>
 
 
-
-      {chartData.length > 0 && (
-        <ResponsiveContainer width="100%" height={400}>
+      <div style={{ overflowX: "auto", width: "100%" }}>
+        <div style={{ width: `${chartData.length * 50}px` }}>
           <BarChart
             data={chartData}
+            width={chartData.length * 50}
+            height={400}
             margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
@@ -98,9 +99,11 @@ function App() {
             <Tooltip />
             <Bar dataKey="count" fill="#8884d8" />
           </BarChart>
-        </ResponsiveContainer>
-      )}
+        </div>
+      </div>
+
     </div>
   );
 }
+
 export default App;
