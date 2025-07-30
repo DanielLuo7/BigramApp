@@ -9,10 +9,12 @@ function App() {
   const [showAll, setShowAll] = useState(false);
   const [mostFrequentK, setMostFrequentK] = useState(20);
   const [minFrequency, setMinFrequency] = useState(1);
+  const [keywords, setKeywords] = useState("");
 
   const handleSubmit = async () => {
     try {
       const queryParams = new URLSearchParams({
+        n: ngramSize,
         min_frequency: minFrequency,
       });
 
@@ -20,7 +22,12 @@ function App() {
         queryParams.append("k_most_frequent", mostFrequentK);
       }
 
-      const response = await axios.post(`http://localhost:8000/ngrams?${queryParams.toString()}`, {text, ngram_size: ngramSize});
+      if (keywords.trim()) {
+        const searchKeywords = keywords.toLowerCase().split(/\s+/).filter(Boolean).join(",");
+        queryParams.append("keywords", searchKeywords);
+      }
+
+      const response = await axios.post(`http://localhost:8000/ngrams?${queryParams.toString()}`, {text});
       setNgrams(response.data);
     } catch (error) {
       if (error.response?.status === 400) {
@@ -88,6 +95,16 @@ function App() {
             min={1}
             value={minFrequency}
             onChange={(e) => setMinFrequency(Number(e.target.value))}
+          />
+        </label>
+
+        <label style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          Search (match any word):
+          <input
+            type="text"
+            placeholder="e.g. city heart time"
+            value={keywords}
+            onChange={(e) => setKeywords(e.target.value)}
           />
         </label>
 
