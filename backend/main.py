@@ -34,7 +34,7 @@ Returns a JSON body containing the count of all bigrams in input text
 
 
 @app.post("/ngrams")
-def extract_bigrams(
+def parse_ngrams(
     payload: TextPayload,
     n: int = Query(2),
     min_frequency: int = Query(1),
