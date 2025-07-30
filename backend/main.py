@@ -35,11 +35,10 @@ Returns a JSON body containing the count of all bigrams in input text
 @app.post("/ngrams")
 def extract_bigrams(
     payload: TextPayload,
-    n: int = Query(2),
     min_frequency: int = Query(1),
     k_most_frequent: int = Query(None),
 ):
-    text = payload.text
+    text, n = payload.text, payload.ngram_size
     words: List[str] = re.findall(r"\b\w+\b", text.lower())
 
     if n > len(words):

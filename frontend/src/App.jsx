@@ -13,7 +13,6 @@ function App() {
   const handleSubmit = async () => {
     try {
       const queryParams = new URLSearchParams({
-        n: ngramSize,
         min_frequency: minFrequency,
       });
 
@@ -21,7 +20,7 @@ function App() {
         queryParams.append("k_most_frequent", mostFrequentK);
       }
 
-      const response = await axios.post(`http://localhost:8000/ngrams?${queryParams.toString()}`, {text});
+      const response = await axios.post(`http://localhost:8000/ngrams?${queryParams.toString()}`, {text, ngram_size: ngramSize});
       setNgrams(response.data);
     } catch (error) {
       if (error.response?.status === 400) {
