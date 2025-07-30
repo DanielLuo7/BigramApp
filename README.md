@@ -21,3 +21,13 @@ If users want the histogram to consist of ngrams containing specific words, they
 
 ## Histogram Scroll Bar
 A UI/UX feature that makes the histogram more readable. Before, the histogram was compressed and unreadable if the number of ngrams exceeded a certain threshold. Now, users can scroll through the histogram for a much better experience
+
+# How To Run
+Right now, this web app only runs locally and is not deployed. To run, follow the steps below.
+
+1. Clone the repo
+2. Install the requirements for the app with `pip install -r requirements.txt` and `npm install` in the frontend folder
+3. In the backend folder, run `uvicorn main:app --reload` to run the local server
+4. In the frontend folder, run `npm run start` to launch the web app
+5. Enter in a block of text in the inputs and enter any search parameters
+6. Click `Generate Histogram` to generate the histogram
