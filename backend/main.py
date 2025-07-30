@@ -1,8 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from collections import Counter
+from collections import deque, defaultdict
 
+from typing import List
 from models import TextPayload
 
 import re
@@ -27,11 +28,22 @@ def check_help():
 """
 Returns a JSON body containing the count of all bigrams in input text
 """
-@app.post("/bigrams")
-def extract_bigrams(payload: TextPayload):
+@app.post("/ngrams")
+def extract_bigrams(payload: TextPayload, n: int = Query(2)):
     text = payload.text
-    words = re.findall(r'\b\w+\b', text.lower())
-    print("words", words)
-    bigrams = Counter(zip(words, words[1:]))
-    res_body = {" ".join(key): value for key, value in bigrams.items()}
-    return JSONResponse(content=res_body)
+    words: List[str] = re.findall(r'\b\w+\b', text.lower())
+
+    if n > len(words):
+        return JSONResponse(status_code=400, 
+                            content={ "error": f"Ngram size can't be greater than length of text" })
+
+    ngram = deque(maxlen=n)
+    ngrams = defaultdict(int)
+
+    # use sliding window to get ngrams
+    for word in words:
+        ngram.append(word) 
+        if len(ngram) == n:
+            ngrams[" ".join(ngram)] += 1
+
+    return JSONResponse(content=ngrams)
