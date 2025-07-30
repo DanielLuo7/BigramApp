@@ -8,13 +8,20 @@ function App() {
   const [ngramSize, setNgramSize] = useState(2);
   const [showAll, setShowAll] = useState(false);
   const [mostFrequentK, setMostFrequentK] = useState(20);
+  const [minFrequency, setMinFrequency] = useState(1);
 
   const handleSubmit = async () => {
     try {
-
-      const response = await axios.post(`http://localhost:8000/ngrams?n=${ngramSize}`, {
-        text,
+      const queryParams = new URLSearchParams({
+        n: ngramSize,
+        min_frequency: minFrequency,
       });
+
+      if (!showAll) {
+        queryParams.append("k_most_frequent", mostFrequentK);
+      }
+
+      const response = await axios.post(`http://localhost:8000/ngrams?${queryParams.toString()}`, {text});
       setNgrams(response.data);
     } catch (error) {
       if (error.response?.status === 400) {
@@ -26,10 +33,8 @@ function App() {
   };
 
   // process response data to be used for histogram
-  const chartData = Object.entries(ngrams)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, showAll ? undefined : mostFrequentK)
-    .map(([ngram, count]) => ({ngram, count,}));
+  const chartData = Object.entries(ngrams).map(([ngram, count]) => ({ngram, count,}));
+  const chartWidth = Math.max(chartData.length * 50, 1300);
 
   return (
     <div>
@@ -76,14 +81,26 @@ function App() {
             onChange={(e) => setMostFrequentK(Number(e.target.value))}
           />
         </label>
+
+        <label>
+          Min frequency:
+          <input
+            type="number"
+            min={1}
+            value={minFrequency}
+            onChange={(e) => setMinFrequency(Number(e.target.value))}
+          />
+        </label>
+
+
       </div>
 
 
       <div style={{ overflowX: "auto", width: "100%" }}>
-        <div style={{ width: `${chartData.length * 50}px` }}>
+        <div style={{ width: `${chartWidth}px` }}>
           <BarChart
             data={chartData}
-            width={chartData.length * 50}
+            width={chartWidth}
             height={400}
             margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
           >
