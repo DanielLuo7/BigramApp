@@ -5,7 +5,6 @@ from typing import List, Optional
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-
 from models import TextPayload
 
 app = FastAPI()
@@ -18,19 +17,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-"""
-Check app's health
-"""
-
 
 @app.get("/health")
 def check_help():
+    """
+    Check app's health
+    """
     return {"health": "ok"}
-
-
-"""
-Returns a JSON body containing the count of all bigrams in input text
-"""
 
 
 @app.post("/ngrams")
@@ -41,6 +34,9 @@ def parse_ngrams(
     k_most_frequent: int = Query(None),
     keywords: Optional[str] = Query(None),
 ):
+    """
+    Returns a JSON body containing the count of all bigrams in input text
+    """
     text = payload.text
     words: List[str] = re.findall(r"\b\w+\b", text.lower())
 
@@ -65,7 +61,9 @@ def parse_ngrams(
             ngram: count
             for ngram, count in ngrams.items()
             if count >= min_frequency
-            and any(word in keywords for word in ngram.split(" ")) # any ngram is in keyword set
+            and any(
+                word in keywords for word in ngram.split(" ")
+            )  # any ngram is in keyword set
         }
     else:
         response_content = {
