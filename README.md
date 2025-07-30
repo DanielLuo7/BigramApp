@@ -1,7 +1,7 @@
 # Bigram App
 
 # Problem Statement
-Built an app that can take an arbitrary block of text and display a histogram of the bigrams in that text
+Build an app that can take an arbitrary block of text and display a histogram of the bigrams in that text
 
 # App Description
 
