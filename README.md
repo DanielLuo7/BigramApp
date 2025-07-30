@@ -7,7 +7,7 @@ Built an app that can take an arbitrary block of text and display a histogram of
 
 Users enter an arbitrary block of text into an input field within the web app along with some other feature parameters. Users then can generate a histogram representing the frequencies of ngrams from their block of text.
 
-![Demo](assets/NgramDemo.mov)
+![Demo](assets/NgramDemo.gif)
 
 ## Ngrams Feature
 Rather than only supporting bigrams, users can now request ngrams for their block of text. The block of text is sent to the backend, normalized into an array of only words consisting of lowercase letters, and then processed into an frequency counter. Right now, the app does not support punctuation and treats all letters in their lowercase form. 
