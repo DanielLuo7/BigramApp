@@ -4,29 +4,42 @@ import axios from "axios";
 
 function App() {
   const [text, setText] = useState("");
-  const [bigrams, setBigrams] = useState({});
+  const [ngrams, setNgrams] = useState({});
+  const [ngramSize, setNgramSize] = useState(2);
 
   const handleSubmit = async () => {
     try {
-      console.log("sending request");
-      const response = await axios.post("http://localhost:8000/bigrams", {
+
+      const response = await axios.post(`http://localhost:8000/ngrams?n=${ngramSize}`, {
         text,
       });
-      setBigrams(response.data);
+      setNgrams(response.data);
     } catch (error) {
-      console.error("Error fetching bigrams:", error);
+      if (error.response?.status === 400) {
+        alert(error.response.data.error);
+      } else {
+        console.error("Unexpected error. Status code:", error.response?.status)
+      }
     }
   };
 
   // process response data to be used for histogram
-  const chartData = Object.entries(bigrams).map(([bigram, count]) => ({
-    bigram,
+  const chartData = Object.entries(ngrams).map(([ngram, count]) => ({
+    ngram,
     count,
   }));
 
   return (
     <div>
-      <h1>Bigram Histogram</h1>
+      <label>
+        N-gram size:
+        <select value={ngramSize} onChange={(e) => setNgramSize(Number(e.target.value))}>
+          {[1, 2, 3, 4, 5].map(n => (
+            <option key={n} value={n}>{n}</option>
+          ))}
+        </select>
+      </label>
+      <h1>Ngram Histogram</h1>
       <textarea
         rows={10}
         cols={50}
@@ -45,7 +58,7 @@ function App() {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="bigram"
+              dataKey="ngram"
               angle={-45}
               textAnchor="end"
               interval={0}
