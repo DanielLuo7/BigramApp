@@ -51,7 +51,6 @@ def extract_bigrams(payload: TextPayload, n: int = Query(2), min_frequency: int 
     if k_most_frequent:
         # sort by frequences in non increasing order. Get the first k ngrams
         k_most_frequent_ngrams = sorted(response_content, key=lambda x: x[1], reverse=True)[:k_most_frequent]
-        response_content = {ngram: ngrams[ngram ]for ngram in k_most_frequent_ngrams}
+        response_content = {ngram: ngrams[ngram] for ngram in k_most_frequent_ngrams}
     
-    print("test", response_content)
     return JSONResponse(content=response_content)
